@@ -1,7 +1,6 @@
 package controllers
 
 import javax.inject.Inject
-
 import api.ApiHandler
 import play.api.libs.json._
 import play.api.mvc._
