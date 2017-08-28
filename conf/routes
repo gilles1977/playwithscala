@@ -1,0 +1,14 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /                           controllers.ProductsController.list
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /index                      controllers.HomeController.index
+GET     /products                   controllers.ProductsController.list
+GET     /products/new               controllers.ProductsController.newProduct
+GET     /products/:ean              controllers.ProductsController.show(ean: Long)
+POST    /products                   controllers.ProductsController.save
+GET     /barcode/:ean               controllers.BarcodesController.barcode(ean: Long)
+->     /api                         api.ApiRouter
