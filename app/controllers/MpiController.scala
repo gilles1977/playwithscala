@@ -17,6 +17,5 @@ class MpiController @Inject()(cc: ControllerComponents, service: MpiService) ext
         ).getOrElse(BadRequest("Error in EnrollmentRequest JSON format"))
       }
     ).getOrElse(BadRequest("Expecting JSON data"))
-
   }
 }
