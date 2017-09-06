@@ -14,3 +14,4 @@ libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0
 libraryDependencies += "com.h2database" % "h2" % "1.4.194"
 libraryDependencies += "org.webjars" % "bootstrap" % "3.3.7-1"
 libraryDependencies += "net.sf.barcode4j" % "barcode4j" % "2.0"
+libraryDependencies ++= Seq(ws)

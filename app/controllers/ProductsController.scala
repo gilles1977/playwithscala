@@ -46,7 +46,7 @@ class ProductsController @Inject()(cc: ControllerComponents) extends AbstractCon
         },
         success = { newProduct =>
           Product.add(newProduct)
-          val successMessage = ("success" -> Messages("products.new.success", newProduct.name))
+          val successMessage = "success" -> Messages("products.new.success", newProduct.name)
           Redirect(routes.ProductsController.show(newProduct.ean)).
             flashing(successMessage)
         }

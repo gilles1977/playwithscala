@@ -3,7 +3,13 @@ package models
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-case class EnrollmentRequest(id: String, version: String, pan: String, merchant: Merchant, browser: Browser) {
+case class EnrollmentRequest(id: String, version: String, pan: String, merchant: Merchant, browser: Browser, scheme: String) {
+  def veReq : VeReq = {
+    VeReq(id, version, pan, merchant, browser)
+  }
+}
+
+case class VeReq(id: String, version: String, pan: String, merchant: Merchant, browser: Browser) {
   def toXml = {
       <ThreeDSecure>
         <Message id={id}>
@@ -24,7 +30,6 @@ case class EnrollmentRequest(id: String, version: String, pan: String, merchant:
         </Message>
       </ThreeDSecure>
   }
-
 }
 
 case class EnrollmentResponse(veRes: VeRes)
@@ -51,7 +56,26 @@ case class VeRes(id: String, version: String, CH: CH, url: String, protocol: Str
   }
 }
 
+object VeRes {
+  def fromXml(node: scala.xml.Node) : VeRes = {
+    val id = (node \ "Message" \ "@id").text
+    val version = (node \ "Message" \ "VERes" \ "version").text
+    val ch = (node \ "Message" \ "VERes" \ "CH").headOption.map(node => CH.fromXml(node)).orNull
+    val url = (node \ "Message" \ "VERes" \ "url").text
+    val protocol = (node \ "Message" \ "VERes" \ "protocol").text
+    VeRes(id, version, ch, url, protocol)
+  }
+}
+
 case class CH(enrolled: String, acctID: String)
+
+object CH {
+  def fromXml(node: scala.xml.Node) : CH = {
+    val enrolled = (node \ "enrolled").text
+    val acctId = (node \ "acctID").text
+    CH(enrolled, acctId)
+  }
+}
 
 object EnrollmentRequest {
   implicit val merchantRead : Reads[Merchant] = (
@@ -71,7 +95,8 @@ object EnrollmentRequest {
       (JsPath \ "version").read[String] and
       (JsPath \ "pan").read[String] and
       (JsPath \ "merchant").read[Merchant] and
-      (JsPath \ "browser").read[Browser]
+      (JsPath \ "browser").read[Browser] and
+      (JsPath \ "scheme").read[String]
     )(EnrollmentRequest.apply _)
 
   implicit val implicitWrite = new Writes[EnrollmentRequest] {

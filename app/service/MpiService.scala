@@ -1,9 +1,17 @@
 package service
 
-import models.{CH, EnrollmentRequest, EnrollmentResponse, VeRes}
+import javax.inject.Inject
 
-class MpiService {
+import models._
+
+class MpiService @Inject() (schemeService: SchemeService) {
+
   def verifyEnrollment(request: EnrollmentRequest): EnrollmentResponse = {
-    EnrollmentResponse(veRes = VeRes(request.id, request.version, CH = CH("Y", "12345"), "https://acsurl.com/auth", "ThreeDSecure"))
+    request match {
+      case EnrollmentRequest(_, "1.0.2", _, _, _, "visa") => EnrollmentResponse(schemeService.getVeResFromVisa(request.veReq))
+      case EnrollmentRequest(_, "1.0.2", _, _, _, "mastercard") => EnrollmentResponse(schemeService.getVeResFromMasterCard(request.veReq))
+      case _ => EnrollmentResponse(veRes = VeRes(request.id, request.version, CH = CH("U", "12345"), "https://acsurl.com/auth", "ThreeDSecure"))
+    }
   }
+
 }
