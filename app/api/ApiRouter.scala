@@ -11,5 +11,6 @@ class ApiRouter @Inject() (controller : ApiController, mpi: MpiController) exten
     case GET(p"/product/${long(ean)}") => controller.product(ean)
     case GET(p"/products") => controller.products
     case POST(p"/enrollment") => mpi.verifyEnrollment
+    case POST(p"/mastercard/${pan}") => mpi.demoMastercard(pan)
   }
 }
